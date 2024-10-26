@@ -8,7 +8,7 @@ const port = 3000;
 
 app.set('view engine', 'ejs');
 
-app.use('/user', userRoute)
+app.use('/user', userRoute);
 app.get('/', (req, res) => {
     res.render('index', { message: 'Hello, world!' });
 });

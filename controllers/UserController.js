@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
+const generateTokenandSetCookies = require("../helpers/generateTokenandSetCookies");
 
 const Signup = async (req, res) => {
   try {
@@ -33,4 +34,43 @@ const Signup = async (req, res) => {
   }
 };
 
-module.exports = { Signup };
+const Login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const find = await User.findOne({ email: email });
+
+    const id = find._id;
+
+    if (find || (await bcrypt.compare(password, find?.password || " "))) {
+      generateTokenandSetCookies({ id }, res);
+    } else {
+      return res
+        .status(404)
+        .json({ message: "User not found or incorrect email or password" });
+    }
+    res.status(200).json({ message: "Login successfully" });
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
+};
+
+const FileUpload = async (req, res) => {
+  try {
+    const filename = req.params.filename;
+    const filePath = path.join(__dirname, "uploaded", filename);
+
+    fs.readFile(filePath, (err, data) => {
+      if (err) {
+        res.status(404).send("File not found");
+      } else {
+        res.setHeader("Content-Type", "application/pdf");
+        res.send(data);
+      }
+    });
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
+};
+
+module.exports = { Signup, FileUpload };
