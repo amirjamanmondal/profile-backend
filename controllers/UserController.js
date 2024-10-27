@@ -4,20 +4,19 @@ const generateTokenandSetCookies = require("../helpers/generateTokenandSetCookie
 
 const Signup = async (req, res) => {
   try {
-    const {
-      name: { firstName, lastName },
-      email,
-      password,
-    } = req.body;
+    console.log(req.body);
+
+    const { name, email, password } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(404).json({ message: "all fields are required" });
+    }
 
     const saltRound = await bcrypt.genSalt(10);
     const hashed = await bcrypt.hash(password, saltRound);
 
     const user = new User({
-      name: {
-        firstName: firstName,
-        lastName: lastName,
-      },
+      name: name,
       email: email,
       password: hashed,
     });
@@ -43,7 +42,7 @@ const Login = async (req, res) => {
     const id = find._id;
 
     if (find || (await bcrypt.compare(password, find?.password || " "))) {
-      generateTokenandSetCookies({ id }, res);
+      generateTokenandSetCookies( id , res);
     } else {
       return res
         .status(404)
@@ -55,22 +54,4 @@ const Login = async (req, res) => {
   }
 };
 
-const FileUpload = async (req, res) => {
-  try {
-    const filename = req.params.filename;
-    const filePath = path.join(__dirname, "uploaded", filename);
-
-    fs.readFile(filePath, (err, data) => {
-      if (err) {
-        res.status(404).send("File not found");
-      } else {
-        res.setHeader("Content-Type", "application/pdf");
-        res.send(data);
-      }
-    });
-  } catch (error) {
-    res.status(500).json(error.message);
-  }
-};
-
-module.exports = { Signup, FileUpload };
+module.exports = { Signup, Login };
