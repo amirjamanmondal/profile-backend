@@ -1,9 +1,9 @@
 const jwt = require("jsonwebtoken");
 
-const generateTokenandSetCookies = async ( id , res) => {
+const generateTokenandSetCookies = async ({ id }, res) => {
   try {
     // Create a plain object with the id
-    const token = jwt.sign(id, process.env.SECRET_KEY, {
+    const token = jwt.sign({ id }, process.env.SECRET_KEY, {
       expiresIn: "5d",
     });
 

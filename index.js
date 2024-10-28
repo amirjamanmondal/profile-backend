@@ -1,4 +1,5 @@
 const express = require("express");
+const coockiParser = require("cookie-parser");
 const path = require("path");
 const fs = require("fs");
 const userRoute = require("./router/UserRoute");
@@ -9,7 +10,8 @@ dotenv.config();
 const app = express();
 const port = 3000;
 
-app.use(express.json())
+app.use(coockiParser);
+app.use(express.json());
 
 app.set("view engine", "ejs");
 
@@ -20,10 +22,9 @@ app.get("/", (req, res) => {
 });
 
 // Serve static files (e.g., HTML, CSS, JavaScript)
-app.use(express.static(path.join(__dirname, "uploaded")));
+app.use("/resume", express.static("./uploaded"));
 
 // Serve PDF files
-app.get("/pdf/:filename", (req, res) => {});
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

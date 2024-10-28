@@ -42,7 +42,7 @@ const Login = async (req, res) => {
     const id = find._id;
 
     if (find || (await bcrypt.compare(password, find?.password || " "))) {
-      generateTokenandSetCookies( id , res);
+      generateTokenandSetCookies({ id }, res);
     } else {
       return res
         .status(404)
