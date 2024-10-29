@@ -12,7 +12,7 @@ const UploadImage = async (req, res) => {
 
     const image = new File({
       fileName: req.file.filename,
-      pathUrl: `/uploaded/${req.file.filename}`,
+      pathUrl: `/resume/${req.file.filename}`,
       userName: user.email,
     });
     await image.save();
